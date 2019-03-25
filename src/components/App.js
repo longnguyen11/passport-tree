@@ -1,14 +1,11 @@
-
-import React, { Component } from 'react';
+import React from 'react';
 import RootFactory from './rootFactory';
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <RootFactory />
-      </div>
-    );
-  }
-}
-
+import { StateProvider } from './StateProvider';
+import initialState from '../constants/initialState';
+import reducer from '../reducers';
+const App = () => (
+  <StateProvider initialState={initialState} reducer={reducer}>
+    <RootFactory />
+  </StateProvider>
+);  
 export default App;
