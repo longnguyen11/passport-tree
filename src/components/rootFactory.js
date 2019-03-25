@@ -1,56 +1,49 @@
-import React, { Component } from 'react';
-import * as Actions from '../actions';
+import React, { useState, useReducer } from 'react';
+import ActionTypes from '../constants/actionTypes';
+import initialState from '../constants/initialState';
+// this works but it is tightly coupling components and reducers
+import reducer from '../reducers/branch';
 const RootFactory = () =>  {
-  // constructor() {
-  //   super();
-  //   this.handleAddBranch = this.handleAddBranch.bind(this);
-  //   this.handleChangeProperty = this.handleChangeProperty.bind(this);
-  //   this.state = {
-  //     name: '',
-  //     showInput: false, // do show/hide later
-  //     rangeMin: 0,
-  //     rangeMax: 0,
-  //   }
-  // }
-  // handleChangeProperty(stateName = '', value) {
-  //   this.setState({[stateName]: value});
-  // }
-  // handleAddBranch() {
-  //   let error = false;
-  //   if(this.state.name === '') {
-  //     this.props.dispatch(Actions.showError('name', 'Name cannot be empty'));
-  //     error = true
-  //   }
-  //   if(this.state.rangeMin >= this.state.rangeMax) {
-  //     this.props.dispatch(Actions.showError('range', 'Minimum cannot exceed or match maximum'));
-  //     error = true;
-  //   }
-  //   if(error) {
-  //     console.log('hereee');
-  //     return;
-  //   }
-  //   this.props.dispatch(Actions.addBranch(this.state.name, range));
-  // }
+  const [name, setName] = useState("");
+  const [min, setMin] = useState(0);
+  const [max, setMax] = useState(0);
+  const [show, setShow] = useState(false);
+  const [branch, dispatch] = useReducer(reducer, initialState);
   return (
     <div>
       RootFactory
-      <input
-        type='text'
-        onChange={(e) => this.handleChangeProperty('name', e.target.value)}
-      />
-      <input
-        type='number'
-        min='0'
-        onChange={(e) => this.handleChangeProperty('rangeMin', e.target.value)}
-      />
-      <input
-        type='number'
-        min='0'
-        onChange={(e) => this.handleChangeProperty('rangeMax', e.target.value)}
-      />
       <button
-      onClick={this.handleAddBranch}
-      >Add a group</button>
+        onClick={e => setShow(!show)}
+      >Add</button>
+      {show && <input
+        value={name}
+        onChange={e => setName(e.target.value)}
+        placeholder="Name"
+        type="text"
+        name="name"
+        required
+      />}
+      {show && <input
+        value={min}
+        onChange={e => setMin(e.target.value)}
+        placeholder="Minimum value"
+        type="number"
+        name="min"
+        required
+      />}
+      {show && <input
+        value={max}
+        onChange={e => setMax(e.target.value)}
+        placeholder="Maximum value"
+        type="number"
+        name="max"
+        required
+      />}
+      {show && <button
+        onClick={e => dispatch({ type: ActionTypes.ADD_BRANCH, name, min, max })}
+      >
+        Add Group
+      </button>}
     </div>
   );
 }

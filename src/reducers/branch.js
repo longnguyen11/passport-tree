@@ -1,9 +1,15 @@
 import { merge } from 'lodash';
 import ActionTypes from '../constants/actionTypes';
-const branch = (state = {}, action) => {
+import initialState from '../constants/initialState';
+const branch = (state = initialState, action) => {
+
+  let newState;
   switch (action.type) {
     case ActionTypes.ADD_BRANCH:
-      return merge({}, state, {branch: 'raaaa'});
+      newState = merge({}, state);
+      const {type, ...omitType} = action;
+      newState.branch.push(omitType);
+      return newState;
     default:
       return state
   }
