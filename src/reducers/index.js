@@ -8,7 +8,17 @@ const reducer = (state = {}, action) => {
     case ActionTypes.ADD_BRANCH:
       newState = merge({}, state);
       newState.branches = newState.branches || [];
-      newState.branches[action.id] = cloneDeep(omit(action, 'type'));
+      newState.branches[action.id] = cloneDeep(omit(action, ['type']));
+      return newState;
+
+    case ActionTypes.CHANGE_BRANCH:
+      newState = merge({}, state);
+      merge(newState.branches[action.id], omit(action, ['type', 'id']));
+      return newState;
+
+    case ActionTypes.DELETE_BRANCH:
+      newState = merge({}, state);
+      delete newState.branches[action.id]
       return newState;
 
     case ActionTypes.GENERATE_LEAF:
