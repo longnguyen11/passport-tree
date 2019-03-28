@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import superagent from 'superagent';
 import io from 'socket.io-client';
 import './tree.css';
-const url = 'https://tree-practice-app.herokuapp.com/';
+const url = 'https://tree-practice-app.herokuapp.com';
 const RootFactory = () => {
   const ws = io(url);
   const name = useFormInput('', {
