@@ -1,7 +1,9 @@
 export default {
-  SHOW_ERROR: 'TreeApp/show/error',
-  ADD_BRANCH: 'TreeApp/add/branch',
-  CHANGE_BRANCH: 'TreeApp/change/branch',
-  GENERATE_LEAF: 'TreeApp/generate/leaf',
-  DELETE_BRANCH: 'TreeApp/delete/branch',
+  SHOW_ROOT_ERROR: 'TreeApp/show/root/error',
+  SHOW_BRANCH_ERROR: 'TreeApp/show/branch/error',
+  MERGE_DATA: 'merge',
+  ADD_BRANCH: 'add',
+  CHANGE_BRANCH: 'change',
+  GENERATE_LEAF: 'generate_leaf',
+  DELETE_BRANCH: 'delete',
 }
