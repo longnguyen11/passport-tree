@@ -8,10 +8,12 @@ import { uuid } from '../util/validation';
 import { StyleContext } from '../context/style';
 import { validateRootForm } from '../util/validation';
 import Button from '@material-ui/core/Button';
+import superagent from 'superagent';
+import io from 'socket.io-client';
 import './tree.css';
-
+const url = 'https://tree-practice-app.herokuapp.com/';
 const RootFactory = () => {
-  var ws = new WebSocket('ws://localhost:3000');
+  const ws = io(url);
   const name = useFormInput('', {
     placeholder:"Name",
     type:"text",
@@ -35,14 +37,8 @@ const RootFactory = () => {
   const [hover, toggleHover] = useState(false);
   const [state, dispatch] = getState();
   useEffect(() => {
-    ws.onmessage = function (event) {
-      let parsedEventData
-      try {
-        parsedEventData = JSON.parse(event.data)
-      } catch (e) {
-        console.log('Fail to parse data');
-      }
-      const transform = get(parsedEventData, 'Items', []).reduce((acc, branch) => {
+    superagent.get(url+'/data').then((event) => {
+      const transform = get(event.body, 'Items', []).reduce((acc, branch) => {
         let leaf = [];
         if(typeof branch.RandomGenerateData === 'string') {
           try {
@@ -65,8 +61,26 @@ const RootFactory = () => {
         })
       }, {})
       dispatch({ type: ActionTypes.MERGE_DATA, transform});
-    };
-  }, [event]);
+    })
+    ws.on('message', function (event) {
+      let transform
+      try {
+        transform = JSON.parse(event)
+      } catch (e) {
+        console.log('Fail to parse data');
+      }
+      dispatch({ type: ActionTypes.CHANGE_BRANCH, ...transform});
+    });
+    ws.on('delete', function (event) {
+      let transform;
+      try {
+        transform = JSON.parse(event)
+      } catch (e) {
+        console.log('Fail to parse data');
+      }
+      dispatch({ type: ActionTypes.DELETE_BRANCH, ...transform});
+    });
+  }, [])
   const branches = Object.keys(state.branches).map((key) => <Branch
     {...state.branches[key]} ws={ws}/>);
   const errorMessages = Object.keys(state.rootErrors).map((key) => {
@@ -105,7 +119,7 @@ const RootFactory = () => {
           if(!isEmpty(errors)) {
             return dispatch({type: ActionTypes.SHOW_ROOT_ERROR, errors});
           }
-          ws.send(JSON.stringify(action));
+          ws.emit('message', JSON.stringify(action));
           return dispatch(action)}}
       >
         Add Group

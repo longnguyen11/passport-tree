@@ -58,7 +58,7 @@ const BranchFactory = (props) => {
               errors: errors
             });
           }
-          props.ws.send(JSON.stringify(action));
+          props.ws.emit('message', JSON.stringify(action));
           return dispatch(action)}}>
         Generate
       </Button>}
@@ -70,7 +70,7 @@ const BranchFactory = (props) => {
             min: e.target.value,
             id: props.id,
           }
-          props.ws.send(JSON.stringify(action));
+          props.ws.emit('message', JSON.stringify(action));
           return dispatch(action)
         }}
       />
@@ -82,17 +82,19 @@ const BranchFactory = (props) => {
             max: e.target.value,
             id: props.id
           }
-          props.ws.send(JSON.stringify(action));
+          props.ws.emit('message', JSON.stringify(action));
           return dispatch(action)
         }} />
       <span>
         <DeleteIcon
           viewBox='0 -3 24 24'
           onClick={() => {
-            return dispatch({
+            const action = {
               type: ActionTypes.DELETE_BRANCH,
               id: props.id,
-            })
+            };
+            props.ws.emit('message', JSON.stringify(action));
+            return dispatch(action);
           }}
         />
       </span>

@@ -17,7 +17,8 @@ const reducer = (state = {}, action) => {
       return newState;
 
     case ActionTypes.MERGE_DATA:
-      return  merge({}, state, action.transform);
+      newState =  merge({}, state, action.transform);
+      return newState;
 
     case ActionTypes.DELETE_BRANCH:
       newState = merge({}, state);
