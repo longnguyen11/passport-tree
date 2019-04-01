@@ -63,6 +63,7 @@ const BranchFactory = (props) => {
         Generate
       </Button>}
       <input style={styleContext.input}
+        type="number"
         value={props.min}
         onChange={(e) => {
           const action = {
@@ -75,6 +76,7 @@ const BranchFactory = (props) => {
         }}
       />
       <input style={styleContext.input}
+        type="number"
         value={props.max}
         onChange={(e) =>{
           const action = {
